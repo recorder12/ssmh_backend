@@ -1,5 +1,3 @@
-# Practice project for Django and REST API
+# Backend for SSHM
 
-To do practice Django REST framework
-
-New project
+Backend server to deliver data from search engine to clients
