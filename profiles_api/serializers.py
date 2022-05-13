@@ -3,9 +3,26 @@ from rest_framework import serializers
 from profiles_api import models
 
 
-class HelloSerializer(serializers.Serializer):
-    """Serializes a name field for testing our APIView"""
-    name = serializers.CharField(max_length=10)
+class SearchSerializer(serializers.Serializer):
+    """Serializes a keyword field for testing our APIView"""
+    # class Meta:
+    #     model = models.SearchItem
+    #     fields = (
+    #         'id',
+    #         'createdAt',
+    #         'contentContributorId',
+    #         'contentContributorScore',
+    #         'contentTitle',
+    #         'popularityName',
+    #         'popularityValue',
+    #         'sourceName',
+    #         'sourceOrder',
+    #         'sourceUrl',
+    #         'vote',
+    #     )
+    keyword = serializers.CharField(max_length=200)
+
+
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -45,5 +62,18 @@ class ProfileFeedItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ProfileFeedItem
-        fields = ('id', 'user_profile', 'status_text', 'created_on')
+        fields = (
+            'id',
+            'user_profile',
+            'createdAt',
+            'contentContributorId',
+            'contentContributorScore',
+            'contentTitle',
+            'popularityName',
+            'popularityValue',
+            'sourceName',
+            'sourceOrder',
+            'sourceUrl',
+            'vote',
+        )
         extra_kwargs = {'user_profile': {'read_only': True}}

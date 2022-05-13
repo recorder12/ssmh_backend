@@ -38,6 +38,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    favorites = models.TextField(null=True, default=None) # {data_object_id, ...}
+    voted = models.TextField(null=True, default=None) # {data_object_id : 1/0/-1, ... }
 
     objects = UserProfileManager()
 
@@ -57,15 +59,45 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class ProfileFeedItem(models.Model):
-    """Profile status update"""
-    user_profile = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
-    status_text = models.CharField(max_length=255)
-    created_on = models.DateTimeField(auto_now_add=True)
+class SearchItem(models.Model):
+    # id = models.IntegerField()
+    createdAt = models.DateTimeField(auto_now_add=True)
+    contentContributorId = models.CharField(max_length=255, default="sshm")
+    contentContributorScore = models.IntegerField(default=0)
+    contentTitle = models.CharField(max_length=500, default="")
+    popularityName = models.CharField(max_length=255, default="")
+    popularityValue = models.IntegerField(default=0)
+    sourceName = models.CharField(max_length=255, default="")
+    sourceOrder = models.IntegerField(default=0)
+    sourceUrl = models.CharField(max_length=500, default="")
+    vote = models.IntegerField(default=0)
 
     def __str__(self):
         """Return the model as a string"""
-        return self.status_text
+        return self.contentTitle
+
+
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
+    # user_profile = models.ForeignKey(
+    #     settings.AUTH_USER_MODEL,
+    #     on_delete=models.CASCADE
+    # )
+    createdAt = models.DateTimeField(auto_now_add=True)
+    contentContributorId = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    # contentContributorId = models.CharField(max_length=255)
+    contentContributorScore = models.IntegerField(default=0)
+    contentTitle = models.CharField(max_length=500, default="")
+    popularityName = models.CharField(max_length=255, default="")
+    popularityValue = models.IntegerField(default=0)
+    sourceName = models.CharField(max_length=255, default="")
+    sourceOrder = models.IntegerField(default=0)
+    sourceUrl = models.CharField(max_length=500, default="")
+    vote = models.IntegerField(default=0)
+
+    def __str__(self):
+        """Return the model as a string"""
+        return self.contentTitle
