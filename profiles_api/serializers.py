@@ -4,25 +4,15 @@ from profiles_api import models
 
 
 class SearchSerializer(serializers.Serializer):
-    """Serializes a keyword field for testing our APIView"""
-    # class Meta:
-    #     model = models.SearchItem
-    #     fields = (
-    #         'id',
-    #         'createdAt',
-    #         'contentContributorId',
-    #         'contentContributorScore',
-    #         'contentTitle',
-    #         'popularityName',
-    #         'popularityValue',
-    #         'sourceName',
-    #         'sourceOrder',
-    #         'sourceUrl',
-    #         'vote',
-    #     )
+    """Serializes a keyword field of APIView"""
     keyword = serializers.CharField(max_length=200)
 
 
+class UserDataSerializer(serializers.Serializer):
+    """Serializer favorites, voted fields of UserProfile"""
+    # {'favorite' : int, 'voted' : {'id' : int}}
+    favorite = serializers.IntegerField()
+    voted = serializers.JSONField()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
