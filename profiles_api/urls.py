@@ -15,6 +15,7 @@ router.register('feed', views.UserProfileFeedViewSet)
 urlpatterns = [
     path('search/', views.SearchView.as_view()),
     path('login/', views.UserLoginApiView.as_view()),
-    path('update/', views.UserProfileDataView.as_view()),
+    path('like/', views.UserLikeView.as_view()),
+    path('vote/', views.UserVoteView.as_view()),
     path('', include(router.urls))
 ]

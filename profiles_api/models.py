@@ -38,8 +38,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    favorites = models.TextField(null=True, default=None) # {data_object_id, ...}
-    voted = models.TextField(null=True, default=None) # {data_object_id : 1/0/-1, ... }
+    favorites = models.TextField(default="") # {data_object_id, ...}
+    voted = models.TextField(default="") # {data_object_id : 1/0/-1, ... }
 
     objects = UserProfileManager()
 

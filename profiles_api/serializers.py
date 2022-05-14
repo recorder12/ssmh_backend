@@ -5,14 +5,19 @@ from profiles_api import models
 
 class SearchSerializer(serializers.Serializer):
     """Serializes a keyword field of APIView"""
-    keyword = serializers.CharField(max_length=200)
+    query = serializers.CharField(max_length=200)
 
 
-class UserDataSerializer(serializers.Serializer):
+class UserLikeSerializer(serializers.Serializer):
+    """Serializer favorites, voted fields of UserProfile"""
+    feed_id = serializers.IntegerField()
+
+
+class UserVoteSerializer(serializers.Serializer):
     """Serializer favorites, voted fields of UserProfile"""
     # {'favorite' : int, 'voted' : {'id' : int}}
-    favorite = serializers.IntegerField()
-    voted = serializers.JSONField()
+    feed_id = serializers.IntegerField()
+    vote = serializers.IntegerField()
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -20,7 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'name', 'password', 'favorites', 'voted')
         extra_kwargs = {
             'password': {
                 'write_only': True,
