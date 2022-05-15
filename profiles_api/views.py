@@ -35,7 +35,7 @@ class SearchView(APIView):
             )
 
         query = serializer.validated_data.get('query')
-        r = requests.post('https://40a2-64-98-208-143.ngrok.io/search', json = {'query' : query})
+        r = requests.post('http://30ec-64-98-208-143.ngrok.io/search', json = {'query' : query})
         feeds = r.json()['Data']
         # feeds = []
 
