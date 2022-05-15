@@ -15,6 +15,8 @@ from profiles_api import serializers
 from profiles_api import models
 from profiles_api import permissions
 
+from django.http import JsonResponse
+
 
 
 class SearchView(APIView):
@@ -29,8 +31,7 @@ class SearchView(APIView):
         # 400 error
         if serializer.is_valid() is False:
             return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+                {"statusCode" : 400, "msg" : "Bad request error"}
             )
 
         query = serializer.validated_data.get('query')
@@ -55,7 +56,7 @@ class SearchView(APIView):
                     if str(obj['id']) in list(voted.keys()):
                         obj['voted'] = voted[str(obj['id'])]
 
-        return Response({'success' : True, 'Data' : feeds })
+        return Response({"msg" : 'success', 'Data' : feeds })
 
 
 class UserLikeView(APIView):
@@ -69,23 +70,19 @@ class UserLikeView(APIView):
         # 401 error
         if request.user.is_authenticated is False:
             return Response(
-                serializer.errors,
-                status=status.HTTP_401_UNAUTHORIZED
+                {"statusCode" : 401, "msg" : "Unauthorized error"}
             )
         # 400 error
         if serializer.is_valid() is False:
             return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+                {"statusCode" : 400, "msg" : "Bad request error"}
             )
-
 
         new_favorite_id = serializer.validated_data.get('feed_id') # int
 
         if new_favorite_id is None:
             return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+                {"statusCode" : 400, "msg" : "Bad request error"}
             )
 
         user = request.user
@@ -99,7 +96,9 @@ class UserLikeView(APIView):
         user.favorites = json.dumps(user_favorites)
         user.save()
 
-        return Response({'msg' : 'success'})
+        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success'},status=200)
+
+        return Response({"statusCode" : 200, 'msg' : 'success'})
 
 
 class UserVoteView(APIView):
@@ -113,15 +112,13 @@ class UserVoteView(APIView):
         # 401 error
         if request.user.is_authenticated is False:
             return Response(
-                serializer.errors,
-                status=status.HTTP_401_UNAUTHORIZED
+                {"statusCode" : 401, "msg" : "Unauthorized error"}
             )
 
         # 400 error
         if serializer.is_valid() is False:
             return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+                {"statusCode" : 400, "msg" : "Bad request error"}
             )
 
         feed_id = serializer.validated_data.get('feed_id')
@@ -129,8 +126,7 @@ class UserVoteView(APIView):
 
         if feed_id is None or vote is None:
             return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
+                {"statusCode" : 400, "msg" : "Bad request error"}
             )
 
         user = request.user
@@ -139,8 +135,7 @@ class UserVoteView(APIView):
         user.voted = json.dumps(user_voted)
         user.save()
 
-        return Response({'msg' : 'success'})
-
+        return Response({"statusCode" : 200, 'msg' : 'success'})
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -163,8 +158,8 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     serializer_class = serializers.ProfileFeedItemSerializer
     queryset = models.ProfileFeedItem.objects.all()
-    permission_classes = (permissions.UpdateOwnStatus, IsAuthenticated)
+    permission_classes = (permissions.UpdateOwnFeed, IsAuthenticated)
 
     def perform_create(self, serializer):
         """Sets the user profile to the logged in user"""
-        serializer.save(user_profile=self.request.user)
+        serializer.save(contentContributorId=self.request.user)

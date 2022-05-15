@@ -86,17 +86,15 @@ class ProfileFeedItem(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     contentContributorId = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL, null=True
     )
     # contentContributorId = models.CharField(max_length=255)
     contentContributorScore = models.IntegerField(default=0)
     contentTitle = models.CharField(max_length=500, default="")
-    popularityName = models.CharField(max_length=255, default="")
-    popularityValue = models.IntegerField(default=0)
     sourceName = models.CharField(max_length=255, default="")
-    sourceOrder = models.IntegerField(default=0)
     sourceUrl = models.CharField(max_length=500, default="")
     vote = models.IntegerField(default=0)
+    query = models.CharField(max_length=200, default="")
 
     def __str__(self):
         """Return the model as a string"""

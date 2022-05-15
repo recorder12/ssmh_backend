@@ -59,16 +59,10 @@ class ProfileFeedItemSerializer(serializers.ModelSerializer):
         model = models.ProfileFeedItem
         fields = (
             'id',
-            'user_profile',
-            'createdAt',
-            'contentContributorId',
-            'contentContributorScore',
+            'query',
             'contentTitle',
-            'popularityName',
-            'popularityValue',
             'sourceName',
-            'sourceOrder',
             'sourceUrl',
-            'vote',
         )
-        extra_kwargs = {'user_profile': {'read_only': True}}
+
+    query = serializers.CharField(max_length=200)
