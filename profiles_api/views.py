@@ -37,6 +37,7 @@ class SearchView(APIView):
         query = serializer.validated_data.get('query')
         r = requests.post('https://40a2-64-98-208-143.ngrok.io/search', json = {'query' : query})
         feeds = r.json()['Data']
+        # feeds = []
 
         if request.user.is_authenticated:
             user = request.user
@@ -56,7 +57,12 @@ class SearchView(APIView):
                     if str(obj['id']) in list(voted.keys()):
                         obj['voted'] = voted[str(obj['id'])]
 
-        return Response({"msg" : 'success', 'Data' : feeds })
+
+        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success', 'Data' : feeds},status=200)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
+
+        # return Response({"msg" : 'success', 'Data' : feeds })
 
 
 class UserLikeView(APIView):
@@ -96,9 +102,12 @@ class UserLikeView(APIView):
         user.favorites = json.dumps(user_favorites)
         user.save()
 
-        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success'},status=200)
+        # to do : post like change value to flask server or external DB shared with flask server
 
-        return Response({"statusCode" : 200, 'msg' : 'success'})
+        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success'},status=200)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
+        # return Response({"statusCode" : 200, 'msg' : 'success'})
 
 
 class UserVoteView(APIView):
@@ -133,9 +142,16 @@ class UserVoteView(APIView):
         user_voted = voted = json.loads(user.voted) if user.voted != "" else {}
         user_voted[str(feed_id)] = vote
         user.voted = json.dumps(user_voted)
+
+        # to do : post vote change value to flask server or external DB shared with flask server
+
         user.save()
 
-        return Response({"statusCode" : 200, 'msg' : 'success'})
+        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success'},status=200)
+        response["Access-Control-Allow-Origin"] = "*"
+        return response
+
+        # return Response({"statusCode" : 200, 'msg' : 'success'})
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):

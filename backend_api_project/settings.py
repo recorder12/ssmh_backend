@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE_CLASSES = (
+    # 'corsheaders.middleware.CorsMiddleware',
     'app.CorsMiddleware'
 )
 
@@ -146,7 +147,13 @@ AUTH_USER_MODEL = 'profiles_api.UserProfile'
 
 STATIC_ROOT = 'static/'
 
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
 
-
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
+    'http://127.0.0.1:8000',
+]
+# CORS_ALLOW_CREDENTIALS = False
 # CORS_ALLOWED_ORIGINS = ['*']
+# CORS_ORIGIN_WHITELIST = ("*")

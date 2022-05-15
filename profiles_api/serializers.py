@@ -59,6 +59,7 @@ class ProfileFeedItemSerializer(serializers.ModelSerializer):
         model = models.ProfileFeedItem
         fields = (
             'id',
+            'contentContributorId',
             'query',
             'contentTitle',
             'sourceName',
