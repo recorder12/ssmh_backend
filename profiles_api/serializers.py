@@ -6,6 +6,9 @@ from profiles_api import models
 class SearchSerializer(serializers.Serializer):
     """Serializes a keyword field of APIView"""
     query = serializers.CharField(max_length=200)
+    sort = serializers.IntegerField()
+    page = serializers.IntegerField()
+    limit = serializers.IntegerField()
 
 
 class UserLikeSerializer(serializers.Serializer):

@@ -27,6 +27,7 @@ class SearchView(APIView):
     def post(self, request):
         """Return searched data"""
         serializer = self.serializer_class(data=request.data)
+        sort_dict = {1:'createdAt', 2:'popularityValue', 3: 'vote'}
 
         # 400 error
         if serializer.is_valid() is False:
@@ -35,6 +36,10 @@ class SearchView(APIView):
             )
 
         query = serializer.validated_data.get('query')
+        sort_value = sort_dict[serializer.validated_data.get('sort')]
+        page = serializer.validated_data.get('page')
+        limit = serializer.validated_data.get('limit')
+
         r = requests.post('http://30ec-64-98-208-143.ngrok.io/search', json = {'query' : query})
         feeds = r.json()['Data']
         # feeds = []
@@ -58,7 +63,9 @@ class SearchView(APIView):
                         obj['voted'] = voted[str(obj['id'])]
 
 
-        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success', 'Data' : feeds},status=200)
+
+        sorted_list = sorted(feeds, key=lambda d: d[sort_value])
+        response = JsonResponse( {"statusCode" : 200, 'msg' : 'success', 'Data' : sorted_list[page : page + limit + 1]}, status=200)
         response["Access-Control-Allow-Origin"] = "*"
         return response
 
